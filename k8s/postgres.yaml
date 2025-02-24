@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blog-svc-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blog-svc-db
+  template:
+    metadata:
+      labels:
+        app: blog-svc-db
+    spec:
+      containers:
+      - name: blog-svc-db
+        image: postgres:13
+        env:
+        - name: POSTGRES_USER
+          value: "blog_svc"
+        - name: POSTGRES_PASSWORD
+          value: "password"
+        - name: POSTGRES_DB
+          value: "blog_svc_development"
+        ports:
+        - containerPort: 5432
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: blog-svc-db
+spec:
+  selector:
+    app: blog-svc-db
+  ports:
+  - protocol: TCP
+    port: 5432
+    targetPort: 5432

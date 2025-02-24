@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blog-svc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blog-svc
+  template:
+    metadata:
+      labels:
+        app: blog-svc
+    spec:
+      containers:
+      - name: blog-svc
+        image: imi56/blog-svc:latest
+        env:
+        - name: DATABASE_HOST
+          value: "blog-svc-db"   # This corresponds to the postgres Service
+        - name: DATABASE_USER
+          value: "blog_svc"
+        - name: DATABASE_PASSWORD
+          value: "password"
+        - name: DATABASE_NAME
+          value: "blog_svc_development"
+        - name: SECRET_KEY_BASE
+          value: "2451e25b54374ddd32ca2f81de485f19d40867b281f6e07f52b9405475ea39eb9efcc7d5e3b47fc42d57d46968e1422c1e1e84eca2f7b3cf925cdd16c792486c"
+        ports:
+        - containerPort: 3000   # Adjust based on your Rails server port
+      imagePullSecrets:
+      - name: dockerhub-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: blog-svc
+spec:
+  type: NodePort
+  selector:
+    app: blog-svc
+  ports:
+  - port: 3000
+    targetPort: 3000
+    nodePort: 30001  # Choose an available node port

@@ -21,10 +21,10 @@ default: &default
 
 development:
   <<: *default
-  database: blog_svc_development
-  username: blog_svc
-  password: password
-  host: localhost
+  database: <%= ENV["DATABASE_NAME"] %>
+  username: <%= ENV["DATABASE_USER"] %>
+  password: <%= ENV["DATABASE_PASSWORD"] %>
+  host:  <%= ENV["DATABASE_HOST"] %>
 test:
   <<: *default
   database: blog_svc_test
@@ -51,6 +51,7 @@ test:
 #
 production:
   <<: *default
-  database: blog_svc_production
-  username: blog_svc
-  password: <%= ENV["BLOG_SVC_DATABASE_PASSWORD"] %>
+  database: <%= ENV["DATABASE_NAME"] %>
+  username: <%= ENV["DATABASE_USER"] %>
+  password: <%= ENV["DATABASE_PASSWORD"] %>
+  host:  <%= ENV["DATABASE_HOST"] %>
