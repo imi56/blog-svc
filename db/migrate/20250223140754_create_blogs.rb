@@ -1,9 +1,9 @@
 class CreateBlogs < ActiveRecord::Migration[7.1]
   def change
     create_table :blogs do |t|
-      t.string :title
+      t.string :user_uuid, index: true, null: false
+      t.string :title, null: false
       t.text :content
-      t.references :user, null: false, foreign_key: true
 
       t.timestamps
     end

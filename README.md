@@ -10,15 +10,9 @@ Things you may want to cover:
 * System dependencies
 
 * Configuration
+If you’re using the Docker driver, NodePort won’t be accessible via the Minikube IP by default. Use minikube service blog-svc --url instead.
 
-* Database creation
+minikube service blog-svc --url
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
 
 * ...
