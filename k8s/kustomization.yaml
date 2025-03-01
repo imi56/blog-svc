@@ -1,0 +1,6 @@
+resources:
+  - blog-svc-configmap.yaml
+  - blog-svc-db-configmap.yaml
+  - blog-svc-secret.yaml
+  - blog-svc-db-secret.yaml
+  - deployment.yaml
