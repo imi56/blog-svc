@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: blog-svc-db-config
+data:
+  POSTGRES_USER: "blog_svc"
+  POSTGRES_DB: "blog_svc_development"

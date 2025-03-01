@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: blog-svc-config
+data:
+  DATABASE_HOST: "blog-svc-db"
+  DATABASE_USER: "blog_svc"
+  DATABASE_NAME: "blog_svc_development"

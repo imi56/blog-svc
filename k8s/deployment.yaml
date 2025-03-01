@@ -17,15 +17,30 @@ spec:
         image: imi56/blog-svc:latest
         env:
           - name: DATABASE_HOST
-            value: "blog-svc-db"
+            valueFrom:
+              configMapKeyRef:
+                name: blog-svc-config
+                key: DATABASE_HOST
           - name: DATABASE_USER
-            value: "blog_svc"
+            valueFrom:
+              configMapKeyRef:
+                name: blog-svc-config
+                key: DATABASE_USER
           - name: DATABASE_NAME
-            value: "blog_svc_development"
+            valueFrom:
+              configMapKeyRef:
+                name: blog-svc-config
+                key: DATABASE_NAME
           - name: DATABASE_PASSWORD
-            value: "password"
+            valueFrom:
+              secretKeyRef:
+                name: blog-svc-secret
+                key: DATABASE_PASSWORD
           - name: SECRET_KEY_BASE
-            value: "2451e25b54374ddd32ca2f81de485f19d40867b281f6e07f52b9405475ea39eb9efcc7d5e3b47fc42d57d46968e1422c1e1e84eca2f7b3cf925cdd16c792486c"
+            valueFrom:
+              secretKeyRef:
+                name: blog-svc-secret
+                key: SECRET_KEY_BASE
         ports:
         - containerPort: 3000   # Adjust based on your Rails server port
       imagePullSecrets:
@@ -63,11 +78,20 @@ spec:
         image: postgres:13
         env:
         - name: POSTGRES_USER
-          value: "blog_svc"
+          valueFrom:
+            configMapKeyRef:
+              name: blog-svc-db-config
+              key: POSTGRES_USER
         - name: POSTGRES_PASSWORD
-          value: "password"
+          valueFrom:
+            secretKeyRef:
+              name: blog-svc-db-secret
+              key: POSTGRES_PASSWORD
         - name: POSTGRES_DB
-          value: "blog_svc_development"
+          valueFrom:
+            configMapKeyRef:
+              name: blog-svc-db-config
+              key: POSTGRES_DB
         ports:
         - containerPort: 5432
 ---
