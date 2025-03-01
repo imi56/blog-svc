@@ -1,4 +1,5 @@
 resources:
+  - namespace.yaml
   - blog-svc-configmap.yaml
   - blog-svc-db-configmap.yaml
   - blog-svc-secret.yaml
