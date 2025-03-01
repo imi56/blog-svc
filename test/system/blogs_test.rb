@@ -16,7 +16,7 @@ class BlogsTest < ApplicationSystemTestCase
 
     fill_in "Content", with: @blog.content
     fill_in "Title", with: @blog.title
-    fill_in "User", with: @blog.user_id
+    fill_in "User", with: @blog.user_uuid
     click_on "Create Blog"
 
     assert_text "Blog was successfully created"
@@ -29,7 +29,7 @@ class BlogsTest < ApplicationSystemTestCase
 
     fill_in "Content", with: @blog.content
     fill_in "Title", with: @blog.title
-    fill_in "User", with: @blog.user_id
+    fill_in "User", with: @blog.user_uuid
     click_on "Update Blog"
 
     assert_text "Blog was successfully updated"

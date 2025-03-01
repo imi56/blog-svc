@@ -105,6 +105,8 @@ GEM
       reline (>= 0.3.8)
     drb (2.2.1)
     erubi (1.13.1)
+    figaro (1.2.0)
+      thor (>= 0.14.0, < 2)
     globalid (1.2.1)
       activesupport (>= 6.1)
     i18n (1.14.7)
@@ -272,6 +274,7 @@ DEPENDENCIES
   bootsnap
   capybara
   debug
+  figaro
   importmap-rails
   jbuilder
   pg (~> 1.1)

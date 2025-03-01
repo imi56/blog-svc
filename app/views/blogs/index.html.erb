@@ -1,14 +1,34 @@
-<p style="color: green"><%= notice %></p>
-
-<h1>Blogs</h1>
-
-<div id="blogs">
-  <% @blogs.each do |blog| %>
-    <%= render blog %>
-    <p>
-      <%= link_to "Show this blog", blog %>
-    </p>
+<div class="container py-4">
+  <% if notice.present? %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <%= notice %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
   <% end %>
-</div>
 
-<%= link_to "New blog", new_blog_path %>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Blogs</h1>
+    <%= link_to new_blog_path, class: "btn btn-primary" do %>
+      <i class="bi bi-plus-circle"></i> New Blog
+    <% end %>
+  </div>
+
+  <div class="row" id="blogs">
+    <% if @blogs.any? %>
+      <% @blogs.each do |blog| %>
+        <div class="col-md-6 col-lg-4 mb-4">
+          <%= render blog %>
+          <div class="text-center mt-2">
+            <%= link_to "Read more", blog, class: "btn btn-sm btn-outline-primary" %>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="col-12">
+        <div class="alert alert-info">
+          <p class="mb-0">No blogs found. <%= link_to "Create your first blog", new_blog_path %> now!</p>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

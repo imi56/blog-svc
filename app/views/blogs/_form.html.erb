@@ -1,32 +1,32 @@
-<%= form_with(model: blog) do |form| %>
+<%= form_with(model: blog, class: "needs-validation", novalidate: true) do |form| %>
   <% if blog.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(blog.errors.count, "error") %> prohibited this blog from being saved:</h2>
-
-      <ul>
+    <div class="alert alert-danger">
+      <h5><i class="bi bi-exclamation-triangle-fill me-2"></i><%= pluralize(blog.errors.count, "error") %> prohibited this blog from being saved:</h5>
+      <ul class="list-group list-group-flush mt-2">
         <% blog.errors.each do |error| %>
-          <li><%= error.full_message %></li>
+          <li class="list-group-item list-group-item-danger"><%= error.full_message %></li>
         <% end %>
       </ul>
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :title, style: "display: block" %>
-    <%= form.text_field :title %>
+  <div class="mb-3">
+    <%= form.label :title, class: "form-label" %>
+    <%= form.text_field :title, class: "form-control form-control-lg", placeholder: "Enter blog title" %>
   </div>
 
-  <div>
-    <%= form.label :content, style: "display: block" %>
-    <%= form.text_area :content %>
+  <div class="mb-3">
+    <%= form.label :content, class: "form-label" %>
+    <%= form.text_area :content, class: "form-control", rows: 6, placeholder: "Write your blog content here..." %>
   </div>
 
-  <div>
-    <%= form.label :user_id, style: "display: block" %>
-    <%= form.text_field :user_id %>
+  <div class="mb-3">
+    <%= form.label :user_uuid, class: "form-label" %>
+    <%= form.text_field :user_uuid, class: "form-control" %>
   </div>
 
-  <div>
-    <%= form.submit %>
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+    <%= link_to "Cancel", blogs_path, class: "btn btn-outline-secondary me-md-2" %>
+    <%= form.submit class: "btn btn-primary" %>
   </div>
 <% end %>
