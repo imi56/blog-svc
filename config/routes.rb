@@ -9,4 +9,5 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "blogs#index"
+  get '/api/tags', to: 'tags#index'
 end

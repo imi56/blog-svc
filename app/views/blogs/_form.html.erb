@@ -25,8 +25,92 @@
     <%= form.text_field :user_uuid, class: "form-control" %>
   </div>
 
+  <div class="mb-3">
+    <%= form.label :tags, "Selected Tags", class: "form-label" %>
+    <div id="selected-tags-container" class="mb-2">
+      <% if blog.tags.present? %>
+        <% blog.tags.split(',').each do |tag| %>
+          <span class="badge bg-primary me-1 mb-1 p-2"><%= tag.strip %></span>
+        <% end %>
+      <% else %>
+        <p class="text-muted">No tags selected</p>
+      <% end %>
+    </div>
+    
+    <%= form.label :tag_selector, "Add Tags", class: "form-label" %>
+    <select id="tag-selector" class="form-select">
+      <option value="">Select a tag</option>
+      <!-- Tags will be populated by JavaScript -->
+    </select>
+    
+    <!-- Hidden field to store tags as comma separated string -->
+    <%= form.hidden_field :tags, id: "tags-field" %>
+  </div>
+
   <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
     <%= link_to "Cancel", blogs_path, class: "btn btn-outline-secondary me-md-2" %>
     <%= form.submit class: "btn btn-primary" %>
   </div>
 <% end %>
+
+<!-- Add this JavaScript to fetch and handle tags -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const selectedTagsContainer = document.getElementById('selected-tags-container');
+    const tagSelector = document.getElementById('tag-selector');
+    const tagsField = document.getElementById('tags-field');
+    
+    const selectedTags = new Set();
+    
+    // Initialize selected tags from existing value
+    if (tagsField.value) {
+      tagsField.value.split(',').forEach(tag => {
+        selectedTags.add(tag.trim());
+      });
+    }
+    
+    // Fetch tags from the tagging service
+    fetch('/api/tags')
+      .then(response => response.json())
+      .then(tags => {
+        tags.forEach(tag => {
+          const option = document.createElement('option');
+          option.value = tag.name;
+          option.textContent = tag.name;
+          tagSelector.appendChild(option);
+        });
+      })
+      .catch(error => console.error('Error fetching tags:', error));
+    
+    // Handle tag selection
+    tagSelector.addEventListener('change', function() {
+      const tagName = this.value;
+      if (!tagName) return;
+      
+      if (!selectedTags.has(tagName)) {
+        selectedTags.add(tagName);
+        
+        // Clear "No tags selected" message if present
+        if (selectedTagsContainer.querySelector('.text-muted')) {
+          selectedTagsContainer.innerHTML = '';
+        }
+        
+        // Create tag badge
+        const tagBadge = document.createElement('span');
+        tagBadge.className = 'badge bg-primary me-1 mb-1 p-2';
+        tagBadge.textContent = tagName;
+        selectedTagsContainer.appendChild(tagBadge);
+        
+        updateTagsField();
+      }
+      
+      // Reset selector
+      this.value = '';
+    });
+    
+    // Update hidden field with comma-separated tags
+    function updateTagsField() {
+      tagsField.value = Array.from(selectedTags).join(',');
+    }
+  });
+</script>
