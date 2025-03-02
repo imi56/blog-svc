@@ -33,10 +33,6 @@ COPY . .
 # Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile app/ lib/
 
-# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
-RUN SECRET_KEY_BASE=2451e25b54374ddd32ca2f81de485f19d40867b281f6e07f52b9405475ea39eb9efcc7d5e3b47fc42d57d46968e1422c1e1e84eca2f7b3cf925cdd16c792486c ./bin/rails assets:precompile
-
-
 # Final stage for app image
 FROM base
 
