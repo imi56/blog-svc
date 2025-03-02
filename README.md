@@ -32,4 +32,7 @@ kubectl config set-context --current --namespace=blog-namespace
 
 #### calling tagging service endpoint from blog-svc
 kubectl exec -it blog-svc-cfbc6bc75-b6p5m -n blog-namespace -- curl tagging-svc.tagging-namespace.svc.cluster.local:8080/tags
+
+#### deploy
+kubectl rollout restart deployment/blog-svc
 * ...

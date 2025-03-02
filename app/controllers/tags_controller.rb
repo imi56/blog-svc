@@ -2,14 +2,12 @@ class TagsController < ApplicationController
   require 'net/http'
 
   def index
-    # Make a request to the tagging service
     uri = URI('http://tagging-svc.tagging-namespace.svc.cluster.local:8080/tags')
-
     begin
       response = Net::HTTP.get_response(uri)
-
       if response.is_a?(Net::HTTPSuccess)
-        render json: response.body
+        tags = JSON.parse(response.body)
+        render json: tags
       else
         render json: { error: 'Failed to fetch tags' }, status: :service_unavailable
       end
