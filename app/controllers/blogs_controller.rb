@@ -1,70 +1,41 @@
 class BlogsController < ApplicationController
-  before_action :set_blog, only: %i[ show edit update destroy ]
+  require 'net/http'
 
-  # GET /blogs or /blogs.json
   def index
     @blogs = Blog.all
-  end
-
-  # GET /blogs/1 or /blogs/1.json
-  def show
-  end
-
-  # GET /blogs/new
-  def new
-    @blog = Blog.new
-  end
-
-  # GET /blogs/1/edit
-  def edit
+    tags = fetch_tags
+    render json: { blogs: @blogs, tags: tags }
   end
 
   # POST /blogs or /blogs.json
   def create
     @blog = Blog.new(blog_params)
 
-    respond_to do |format|
-      if @blog.save
-        format.html { redirect_to @blog, notice: "Blog was successfully created." }
-        format.json { render :show, status: :created, location: @blog }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @blog.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # PATCH/PUT /blogs/1 or /blogs/1.json
-  def update
-    respond_to do |format|
-      if @blog.update(blog_params)
-        format.html { redirect_to @blog, notice: "Blog was successfully updated." }
-        format.json { render :show, status: :ok, location: @blog }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @blog.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /blogs/1 or /blogs/1.json
-  def destroy
-    @blog.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to blogs_path, status: :see_other, notice: "Blog was successfully destroyed." }
-      format.json { head :no_content }
+    if @blog.save
+      render json: @blog, status: :created
+    else
+      render json: { errors: @blog.errors }, status: :unprocessable_entity
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_blog
-      @blog = Blog.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def blog_params
-      params.require(:blog).permit(:title, :content, :user_uuid, :tags)
+  def fetch_tags
+    uri = URI('http://tagging-svc.tagging-namespace.svc.cluster.local:8080/tags')
+    response = Net::HTTP.get_response(uri)
+    if response.is_a?(Net::HTTPSuccess)
+      JSON.parse(response.body)
+    else
+      Rails.logger.error "Failed to fetch tags, response code: #{response.code}"
+      []  # Return an empty array if response is unsuccessful.
     end
+  rescue => e
+    Rails.logger.error "Error fetching tags: #{e.message}"
+    []  # Return an empty array if an exception occurs.
+  end
+
+  # Only allow a list of trusted parameters through.
+  def blog_params
+    params.require(:blog).permit(:title, :content, :user_uuid, :tags)
+  end
 end
