@@ -2,6 +2,8 @@ class BlogsController < ApplicationController
   require 'net/http'
 
   def index
+    Rails.logger.info("index blog request received")
+
     @blogs = Blog.all
     tags = fetch_tags
     render json: { blogs: @blogs, tags: tags }
